@@ -1,0 +1,86 @@
+<div class="col-md-8">
+    <div class="col-md-12">
+        <h1>Demo Google Map</h1>
+    </div>
+    <div class="col-md-12">
+        <!-- <mat-button-toggle-group name="mapType" aria-label="Google Map Types" [value]="googleMapType" (change)="setMapType($event)">
+            <mat-button-toggle value="roadmap">RoadMap</mat-button-toggle>
+            <mat-button-toggle value="satellite">Satellite</mat-button-toggle>
+            <mat-button-toggle value="hybrid">Hybrid</mat-button-toggle>
+            <mat-button-toggle value="terrain">Terrain</mat-button-toggle>
+        </mat-button-toggle-group> -->
+        <button type="button" class="btn btn-sm btn-link text-uppercase" *ngFor="let type of mapTypes" (click) = "setMapType(type)" style="margin-right: 3px;">{{type}}</button>  
+    </div>
+    
+    <agm-map 
+    [latitude]="lat"
+    [longitude]="lng"
+    [zoom]="zoom"
+    [disableDefaultUI]="false"
+    (mapClick)="mapClicked($event)"
+    [mapTypeId]='googleMapType'>
+
+        <agm-marker 
+            *ngFor="let m of markers; let i = index"
+            [latitude]="m.lat"
+            [longitude]="m.lng"
+            [markerDraggable]="m.draggable"
+            
+            (dragEnd)="markerDragEnd(m, $event)">
+            
+            <agm-info-window>
+                <strong>{{m.content}} km</strong>
+            </agm-info-window>
+            <!-- <agm-snazzy-info-window  #snazzyInfoWindow 
+                [latitude]="lat" 
+                [longitude]="lng" 
+                [closeWhenOthersOpen]="true" 
+                [closeOnMapClick]="true" 
+                [isOpen]="isSnazzyWindowOpened" 
+                (isOpenChange)="snazzyInfoWindowIsToggled($event)">
+                <ng-template>
+                Information Text
+                </ng-template>
+            </agm-snazzy-info-window> -->
+
+            <!-- <agm-overlay
+            [visible]="false"
+            [draggable]="true"
+            [latitude]="m.lat"
+            [longitude]="m.lng"
+            >
+            <i
+            class="fas fa-map-marker-alt"
+            [style.color]="m.color"
+            style="font-size: 25px"
+            ></i>
+            </agm-overlay> -->
+        </agm-marker>
+        
+        <agm-circle [latitude]="lat + 0.3" [longitude]="lng" 
+            [radius]="1000"
+            [fillColor]="'red'"
+            [circleDraggable]="true"
+            [editable]="true">
+        </agm-circle>
+    </agm-map>
+</div>
+<div class="col-md-8 offset-md-2" style="margin-top: 3px;">
+    <form [formGroup]="latLongForm" (ngSubmit)="LocateLocation(latLongForm.value)">
+        <label>
+            Latitude
+            <input type="text" formControlName="latitude" required>
+        </label>
+        <label>
+            Longitude
+            <input type="text" formControlName="longitude" required>
+        </label>
+        <button type="submit" [disabled]="!latLongForm.valid" class = "btn btn-sm btn-success text-uppercase">Submit</button>
+    </form>
+    <button class = "btn btn-sm btn-success text-uppercase"(click)="saveCoordinates()">Save Marker Coordinates</button>
+    <!-- <h5>Address: {{address}}</h5> -->
+    <div><span class="badge bg-primary">Latitude: {{lat  | number: '2.5-5'}}</span></div>
+    <div><span class="badge bg-primary">Longitude: {{lng  | number: '2.5-5'}}</span></div>
+</div>
+    
+    
